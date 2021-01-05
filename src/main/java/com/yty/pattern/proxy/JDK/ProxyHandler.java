@@ -1,4 +1,4 @@
-package com.yty.pattern.proxy.JDKProxy;
+package com.yty.pattern.proxy.JDK;
 
 import com.yty.pattern.proxy.RealSubject;
 import com.yty.pattern.proxy.Subject;
@@ -21,13 +21,27 @@ import java.lang.reflect.Proxy;
 public class ProxyHandler implements InvocationHandler {
     private Object obj=null;
 
+    /**
+     * Object Proxy.newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler handler)
+     *
+     * loader，表示类加载器，对于不同来源（系统库或网络等）的类需要不同的类加载器来加载，
+     *         这是Java安全模型的一部分。可以使用null来使用默认的加载器；
+     * interfaces，表示接口或对象的数组，它就是前述代理对象和真实对象都必须共有的父类或者接口；
+     * handler，表示调用处理器，它必须是实现了InvocationHandler接口的对象，其作用是定义代理对象中需要执行的具体操作。
+     */
     public Object newProxyInstance(Object realObj){
         this.obj = realObj;
         Class<?> classType = this.obj.getClass();
-        // Object Proxy.newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler handler)
         return Proxy.newProxyInstance(classType.getClassLoader(), classType.getInterfaces(), this);
     }
 
+    /**
+     * Object invoke(Object proxy, Method method, Object[] args) throws Throwable
+     *
+     * proxy，表示执行这个方法的代理对象；
+     * method，表示真实对象实际需要执行的方法（关于Method类参见Java的反射机制）；
+     * args，表示真实对象实际执行方法时所需的参数。
+     */
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         System.out.print("I'm JDKProxy, I'm invoking...");
